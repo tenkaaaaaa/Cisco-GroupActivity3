@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Route Planner</title>
+    
+    <!-- Link to your custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- Leaflet Map CSS (Required for the map to work) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+    <div class="container">
+        <h1>✨ Neon Route Planner</h1>
+        <p class="subtitle">Enter your locations below to get instant directions.</p>
+
+        <!-- The Input Form -->
+        <form method="POST" class="route-form">
+            <div class="input-group">
+                <label>Starting Location:</label>
+                <input type="text" name="start_loc" placeholder="e.g., Manila, Philippines" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Destination:</label>
+                <input type="text" name="end_loc" placeholder="e.g., Tagaytay, Philippines" required>
+            </div>
+
+            <div class="row">
+                <div class="input-group">
+                    <label>Vehicle:</label>
+                    <select name="vehicle">
+                        <option value="car">🚗 Car</option>
+                        <option value="bike">🚲 Bike</option>
+                        <option value="foot">🚶 Foot</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Units:</label>
+                    <select name="unit">
+                        <option value="metric">Metric (km)</option>
+                        <option value="imperial">Imperial (miles)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Get Directions</button>
+        </form>
+
+        <!-- Error Message (Only shows if something goes wrong) -->
+        {% if error %}
+            <div class="error-box">❌ {{ error }}</div>
+        {% endif %}
+
+        <!-- Results Section (Only shows if a route is successfully found) -->
+        {% if route %}
+            <div class="results">
+                <h2>Route Summary</h2>
+                <div class="summary-cards">
+                    <div class="card">
+                        <h3>📍 From</h3>
+                        <p>{{ route.start_name }}</p>
+                    </div>
+                    <div class="card">
+                        <h3>📍 To</h3>
+                        <p>{{ route.end_name }}</p>
+                    </div>
+                    <div class="card">
+                        <h3>📏 Distance</h3>
+                        <p>{{ route.distance }}</p>
+                    </div>
+                    <div class="card">
+                        <h3>⏱️ Time</h3>
+                        <p>{{ route.time }}</p>
+                    </div>
+                </div>
+
+                <h2>Interactive Map</h2>
+                <!-- The map container -->
+                <div id="map"></div>
+
+                <h2>Turn-by-Turn Directions</h2>
+                <table class="directions-table">
+                    <thead>
+                        <tr>
+                            <th>Instruction</th>
+                            <th>Distance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for step in route.instructions %}
+                        <tr>
+                            <td>{{ step.text }}</td>
+                            <td>{{ step.dist }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 1. Load Leaflet Map Library -->
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+            
+            <!-- 2. Load your custom script.js file -->
+            <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+            <!-- 3. Pass data from Python to JavaScript and run the map -->
+            <script>
+                // These variables grab the data from Flask/Python
+                var mapCoords = {{ route.map_coords | tojson }};
+                var startCoord = {{ route.start_coord | tojson }};
+                var endCoord = {{ route.end_coord | tojson }};
+                
+                // This calls the function inside script.js
+                initMap(mapCoords, startCoord, endCoord);
+            </script>
+        {% endif %}
+    </div>
+</body>
+</html>
