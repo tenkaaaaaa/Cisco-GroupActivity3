@@ -345,3 +345,78 @@ select {
 @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
 }
+
+/* ---------- Quote ---------- */
+.quote {
+    margin-top: 22px;
+    max-width: 56ch;
+    padding-left: 16px;
+    border-left: 3px solid var(--accent);
+}
+.quote blockquote { font-size: 1.02rem; line-height: 1.5; }
+.quote figcaption { margin-top: 4px; font-size: 0.88rem; color: var(--muted); }
+
+/* ---------- Trip insights ---------- */
+.insights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.insight {
+    padding: 20px 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.insight h2 {
+    margin-bottom: 8px;
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.insight-big {
+    font-family: 'Bricolage Grotesque', 'Figtree', sans-serif;
+    font-weight: 700;
+    font-size: 1.9rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.insight-note {
+    margin-top: 8px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--muted);
+}
+
+.warnings { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+.warnings li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.warnings .ok { color: var(--muted); }
+
+.tag {
+    padding: 2px 9px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 999px;
+}
+.tag-toll    { color: var(--accent-dark); background: #fbe6df; }
+.tag-highway { color: var(--ink); background: #e3eaf2; }
+
+@media (max-width: 860px) {
+    .insights { grid-template-columns: 1fr; }
+}
